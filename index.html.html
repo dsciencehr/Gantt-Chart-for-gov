@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>정부사업 참여율 현황</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #f7f7f5; --surface: #ffffff;
+    --border: rgba(0,0,0,0.1); --border-strong: rgba(0,0,0,0.2);
+    --text: #1a1a1a; --text-muted: #6b6b68; --text-hint: #9b9b98;
+    --radius-md: 8px; --radius-lg: 12px;
+    --blue-fill: #B5D4F4; --blue-text: #0C447C;
+    --orange-fill: #FAC775; --orange-text: #633806;
+    --green-fill: #C0DD97; --green-text: #27500A;
+    --purple-fill: #CECBF6; --purple-text: #3C3489;
+    --coral-fill: #F5C4B3; --coral-text: #712B13;
+    --pink-fill: #F4C0D1; --pink-text: #72243E;
+    --error-fill: #FCEBEB; --error-text: #791F1F; --error-border: #F09595;
+    --ok-fill: #EAF3DE; --ok-text: #27500A;
+    --warn-fill: #FAEEDA; --warn-text: #633806;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1e1e1c; --surface: #2a2a28;
+      --border: rgba(255,255,255,0.1); --border-strong: rgba(255,255,255,0.2);
+      --text: #f0f0ee; --text-muted: #a0a09e; --text-hint: #6b6b68;
+      --blue-fill: #0C447C; --blue-text: #B5D4F4;
+      --orange-fill: #633806; --orange-text: #FAC775;
+      --green-fill: #27500A; --green-text: #C0DD97;
+      --purple-fill: #3C3489; --purple-text: #CECBF6;
+      --coral-fill: #712B13; --coral-text: #F5C4B3;
+      --pink-fill: #72243E; --pink-text: #F4C0D1;
+      --error-fill: #501313; --error-text: #F7C1C1; --error-border: #E24B4A;
+      --ok-fill: #173404; --ok-text: #C0DD97;
+      --warn-fill: #412402; --warn-text: #FAC775;
+    }
+  }
+  body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; min-height: 100vh; }
+  .page { max-width: 1000px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+  .page-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 2rem; flex-wrap: wrap; gap: 12px; }
+  .page-title { font-size: 20px; font-weight: 600; }
+  .subtitle { font-size: 13px; color: var(--text-muted); margin-top: 3px; }
+  .header-right { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .btn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: var(--radius-md); border: 1px solid var(--border-strong); background: var(--surface); color: var(--text); font-size: 13px; font-weight: 500; cursor: pointer; transition: background 0.15s; }
+  .btn:hover { background: var(--bg); }
+  .btn-primary { background: var(--text); color: var(--bg); border-color: var(--text); }
+  .btn-primary:hover { opacity: 0.85; }
+  .status-bar { display: flex; align-items: center; gap: 10px; padding: 10px 16px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); margin-bottom: 1.5rem; font-size: 13px; }
+  .status-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .dot-loading { background: var(--warn-text); animation: pulse 1s infinite; }
+  .dot-ok { background: #27500A; }
+  .dot-error { background: var(--error-text); }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); margin-bottom: 16px; overflow: hidden; }
+  .card-header { display: flex; align-items: center; gap: 12px; padding: 14px 20px; border-bottom: 1px solid var(--border); }
+  .avatar { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; flex-shrink: 0; }
+  .person-name { font-size: 15px; font-weight: 600; }
+  .person-meta { font-size: 12px; color: var(--text-muted); margin-top: 1px; }
+  .badge { font-size: 12px; padding: 3px 10px; border-radius: 20px; font-weight: 500; white-space: nowrap; }
+  .badge-ok { background: var(--ok-fill); color: var(--ok-text); }
+  .badge-warn { background: var(--warn-fill); color: var(--warn-text); }
+  .badge-error { background: var(--error-fill); color: var(--error-text); }
+  .card-body { padding: 16px 20px 20px; }
+  .year-block { margin-bottom: 18px; }
+  .year-label { font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+  .year-badge-ok  { background: var(--ok-fill);   color: var(--ok-text);   font-size:11px; padding:2px 8px; border-radius:10px; font-weight:500; }
+  .year-badge-error { background: var(--error-fill); color: var(--error-text); font-size:11px; padding:2px 8px; border-radius:10px; font-weight:500; }
+  .month-header { display: grid; grid-template-columns: 110px 1fr; margin-bottom: 6px; }
+  .month-row { display: grid; grid-template-columns: repeat(12, 1fr); }
+  .month-label { font-size: 11px; color: var(--text-hint); text-align: center; }
+  .proj-row { display: grid; grid-template-columns: 110px 1fr; align-items: center; margin-bottom: 6px; }
+  .proj-name { font-size: 12px; font-weight: 500; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 10px; }
+  .proj-period { font-size: 11px; color: var(--text-muted); }
+  .bar-row { display: grid; grid-template-columns: repeat(12, 1fr); gap: 2px; height: 26px; }
+  .bar-empty { background: var(--bg); border-radius: 3px; height: 26px; }
+  .bar-filled { height: 26px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; }
+  .bar-blue   { background: var(--blue-fill);   color: var(--blue-text); }
+  .bar-orange { background: var(--orange-fill); color: var(--orange-text); }
+  .bar-green  { background: var(--green-fill);  color: var(--green-text); }
+  .bar-purple { background: var(--purple-fill); color: var(--purple-text); }
+  .bar-coral  { background: var(--coral-fill);  color: var(--coral-text); }
+  .bar-pink   { background: var(--pink-fill);   color: var(--pink-text); }
+  .total-wrap { margin-top: 6px; padding-top: 8px; border-top: 1px solid var(--border); display: grid; grid-template-columns: 110px 1fr; align-items: center; }
+  .total-label { font-size: 11px; color: var(--text-muted); font-weight: 500; }
+  .total-cells { display: grid; grid-template-columns: repeat(12, 1fr); gap: 2px; }
+  .total-cell { height: 22px; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; }
+  .t-empty { background: var(--bg); }
+  .t-ok   { background: var(--ok-fill);   color: var(--ok-text); }
+  .t-full { background: var(--warn-fill); color: var(--warn-text); }
+  .t-over { background: repeating-linear-gradient(45deg, var(--error-border), var(--error-border) 3px, var(--error-fill) 3px, var(--error-fill) 7px); border: 1px solid var(--error-border); color: var(--error-text); }
+  .error-banner { margin-top: 10px; padding: 9px 13px; background: var(--error-fill); border: 1px solid var(--error-border); border-radius: var(--radius-md); font-size: 12px; color: var(--error-text); }
+  .legend { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--border); }
+  .legend-item { display: flex; align-items: center; gap: 5px; font-size: 12px; color: var(--text-muted); }
+  .legend-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+  .empty-state { text-align: center; padding: 4rem 1rem; color: var(--text-muted); font-size: 14px; line-height: 2; }
+  .config-panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem 1.5rem; margin-bottom: 1.5rem; }
+  .config-panel h3 { font-size: 14px; font-weight: 600; margin-bottom: 12px; }
+  .config-row { display: grid; grid-template-columns: 120px 1fr; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .config-label { font-size: 13px; color: var(--text-muted); }
+  .config-input { padding: 7px 12px; font-size: 13px; border-radius: var(--radius-md); border: 1px solid var(--border-strong); background: var(--bg); color: var(--text); width: 100%; outline: none; }
+  .config-input:focus { border-color: var(--text); }
+  .avatar-colors { background-color: }
+  .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid var(--border); border-top-color: var(--text); border-radius: 50%; animation: spin 0.7s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="page-header">
+    <div>
+      <div class="page-title">📊 정부사업 참여율 현황</div>
+      <div class="subtitle">사람별 월간 참여율 합계가 100%를 넘으면 안 됩니다</div>
+    </div>
+    <div class="header-right">
+      <button class="btn" onclick="toggleConfig()">⚙ 설정</button>
+      <button class="btn btn-primary" onclick="loadData()">↻ 새로고침</button>
+    </div>
+  </div>
+
+  <!-- 설정 패널 -->
+  <div class="config-panel" id="config-panel" style="display:none;">
+    <h3>구글 시트 연동 설정</h3>
+    <div class="config-row">
+      <label class="config-label">시트 ID</label>
+      <input class="config-input" id="cfg-sheet-id" placeholder="구글 시트 ID 붙여넣기">
+    </div>
+    <div class="config-row">
+      <label class="config-label">API 키</label>
+      <input class="config-input" id="cfg-api-key" type="password" placeholder="AIzaSy...">
+    </div>
+    <div class="config-row">
+      <label class="config-label">시트 이름</label>
+      <input class="config-input" id="cfg-sheet-name" placeholder="Sheet1">
+    </div>
+    <div style="display:flex; gap:8px; margin-top:4px; justify-content:flex-end;">
+      <button class="btn" onclick="toggleConfig()">취소</button>
+      <button class="btn btn-primary" onclick="saveConfig()">저장 후 불러오기</button>
+    </div>
+  </div>
+
+  <!-- 상태 바 -->
+  <div class="status-bar" id="status-bar">
+    <div class="status-dot dot-loading" id="status-dot"></div>
+    <span id="status-text">설정을 입력하고 데이터를 불러오세요</span>
+  </div>
+
+  <div id="list"></div>
+</div>
+
+<script>
+const MONTHS = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
+const BAR_COLORS = [
+  {cls:'bar-blue',   bg:'#B5D4F4'},
+  {cls:'bar-orange', bg:'#FAC775'},
+  {cls:'bar-green',  bg:'#C0DD97'},
+  {cls:'bar-purple', bg:'#CECBF6'},
+  {cls:'bar-coral',  bg:'#F5C4B3'},
+  {cls:'bar-pink',   bg:'#F4C0D1'},
+];
+const AVATAR_STYLES = [
+  {bg:'#EEEDFE', color:'#3C3489'}, {bg:'#E1F5EE', color:'#085041'},
+  {bg:'#FAECE7', color:'#712B13'}, {bg:'#E6F1FB', color:'#0C447C'},
+  {bg:'#EAF3DE', color:'#27500A'}, {bg:'#FAEEDA', color:'#633806'},
+];
+
+// 설정 로드/저장
+let config = {
+  sheetId:   localStorage.getItem('sheetId')   || '',
+  apiKey:    localStorage.getItem('apiKey')     || '',
+  sheetName: localStorage.getItem('sheetName') || 'Sheet1',
+};
+
+function toggleConfig() {
+  const panel = document.getElementById('config-panel');
+  const visible = panel.style.display !== 'none';
+  panel.style.display = visible ? 'none' : 'block';
+  if (!visible) {
+    document.getElementById('cfg-sheet-id').value   = config.sheetId;
+    document.getElementById('cfg-api-key').value    = config.apiKey;
+    document.getElementById('cfg-sheet-name').value = config.sheetName;
+  }
+}
+
+function saveConfig() {
+  config.sheetId   = document.getElementById('cfg-sheet-id').value.trim();
+  config.apiKey    = document.getElementById('cfg-api-key').value.trim();
+  config.sheetName = document.getElementById('cfg-sheet-name').value.trim() || 'Sheet1';
+  localStorage.setItem('sheetId',   config.sheetId);
+  localStorage.setItem('apiKey',    config.apiKey);
+  localStorage.setItem('sheetName', config.sheetName);
+  document.getElementById('config-panel').style.display = 'none';
+  loadData();
+}
+
+function setStatus(type, text) {
+  const dot  = document.getElementById('status-dot');
+  const span = document.getElementById('status-text');
+  dot.className  = 'status-dot ' + (type === 'loading' ? 'dot-loading' : type === 'ok' ? 'dot-ok' : 'dot-error');
+  span.textContent = text;
+}
+
+async function loadData() {
+  if (!config.sheetId || !config.apiKey) {
+    setStatus('error', '⚙ 설정 버튼을 눌러 시트 ID와 API 키를 입력해주세요');
+    return;
+  }
+  setStatus('loading', '구글 시트에서 데이터를 불러오는 중... ');
+  const range = encodeURIComponent(`${config.sheetName}!A:F`);
+  const url = `https://sheets.googleapis.com/v4/spreadsheets/${config.sheetId}/values/${range}?key=${config.apiKey}`;
+  try {
+    const res  = await fetch(url);
+    const json = await res.json();
+    if (json.error) throw new Error(json.error.message);
+    const rows = (json.values || []).slice(1); // 헤더 제외
+    if (!rows.length) { setStatus('error', '시트에 데이터가 없습니다'); return; }
+    const parsed = rows.map(r => ({
+      name:    (r[0] || '').trim(),
+      project: (r[1] || '').trim(),
+      year:    parseInt(r[2]),
+      start:   parseInt(r[3]),
+      end:     parseInt(r[4]),
+      rate:    parseInt(r[5]),
+    })).filter(r => r.name && r.project && r.year && r.start && r.end && r.rate);
+    setStatus('ok', `✅ ${parsed.length}개 데이터 불러옴 — 마지막 업데이트: ${new Date().toLocaleTimeString()}`);
+    render(parsed);
+  } catch(e) {
+    setStatus('error', '❌ 오류: ' + e.message);
+    document.getElementById('list').innerHTML = `<div class="empty-state">데이터를 불러오지 못했습니다.<br>시트 ID, API 키, 공개 설정을 확인해주세요.</div>`;
+  }
+}
+
+function groupData(data) {
+  const map = {};
+  data.forEach(d => {
+    if (!map[d.name]) map[d.name] = {};
+    if (!map[d.name][d.year]) map[d.name][d.year] = [];
+    map[d.name][d.year].push(d);
+  });
+  return map;
+}
+
+function calcTotals(projects) {
+  const t = Array(12).fill(0);
+  projects.forEach(p => { for (let m = p.start-1; m < p.end; m++) t[m] += p.rate; });
+  return t;
+}
+
+function initials(name) { return name.length <= 2 ? name : name.slice(0,2); }
+
+function render(data) {
+  const grouped = groupData(data);
+  const list    = document.getElementById('list');
+  if (!Object.keys(grouped).length) {
+    list.innerHTML = '<div class="empty-state">데이터가 없습니다</div>';
+    return;
+  }
+  list.innerHTML = Object.entries(grouped).map(([person, yearMap], pi) => {
+    const avStyle = AVATAR_STYLES[pi % AVATAR_STYLES.length];
+    const years   = Object.keys(yearMap).map(Number).sort();
+
+    // 전체 초과 여부
+    const allProjects = years.flatMap(y => yearMap[y]);
+    const allMax = Math.max(...years.map(y => Math.max(...calcTotals(yearMap[y]))));
+    const isOver = allMax > 100;
+
+    const yearBlocks = years.map(year => {
+      const projects = yearMap[year];
+      const totals   = calcTotals(projects);
+      const maxTotal = Math.max(...totals);
+      const yearOver = maxTotal > 100;
+
+      const projRows = projects.map((p, i) => {
+        const col   = BAR_COLORS[i % BAR_COLORS.length];
+        const cells = MONTHS.map((_, m) => {
+          if (m >= p.start-1 && m < p.end) {
+            const rS = m === p.start-1, rE = m === p.end-1;
+            return `<div class="bar-filled ${col.cls}" style="border-radius:${rS?'4px':'0'} ${rE?'4px':'0'} ${rE?'4px':'0'} ${rS?'4px':'0'}">${rS ? p.rate+'%' : ''}</div>`;
+          }
+          return `<div class="bar-empty"></div>`;
+        }).join('');
+        return `
+          <div class="proj-row">
+            <div class="proj-label"><div class="proj-name">${p.project}</div><div class="proj-period">${MONTHS[p.start-1]}~${MONTHS[p.end-1]}</div></div>
+            <div class="bar-row">${cells}</div>
+          </div>`;
+      }).join('');
+
+      const totalCells = totals.map(t => {
+        if (t === 0)    return `<div class="total-cell t-empty"></div>`;
+        if (t > 100)   return `<div class="total-cell t-over">${t}%</div>`;
+        if (t === 100) return `<div class="total-cell t-full">${t}%</div>`;
+        return `<div class="total-cell t-ok">${t}%</div>`;
+      }).join('');
+
+      const errorMonths = totals.map((t,i) => t > 100 ? MONTHS[i] : null).filter(Boolean);
+      const errorBanner = errorMonths.length
+        ? `<div class="error-banner">⚠ ${errorMonths.join(', ')} 구간에서 100%를 초과합니다. 조정이 필요합니다.</div>` : '';
+
+      const legend = projects.map((p,i) => {
+        const col = BAR_COLORS[i % BAR_COLORS.length];
+        return `<div class="legend-item"><div class="legend-dot" style="background:${col.bg}"></div>${p.project} (${p.rate}%)</div>`;
+      }).join('');
+
+      return `
+        <div class="year-block">
+          <div class="year-label">
+            ${year}년
+            <span class="${yearOver ? 'year-badge-error' : 'year-badge-ok'}">${yearOver ? '⚠ 최대 '+maxTotal+'%' : '✅ 정상'}</span>
+          </div>
+          <div class="month-header">
+            <div></div>
+            <div class="month-row">${MONTHS.map(m=>`<div class="month-label">${m}</div>`).join('')}</div>
+          </div>
+          ${projRows}
+          <div class="total-wrap">
+            <div class="total-label">월 합계</div>
+            <div class="total-cells">${totalCells}</div>
+          </div>
+          ${errorBanner}
+          <div class="legend">${legend}</div>
+        </div>`;
+    }).join('');
+
+    return `
+      <div class="card">
+        <div class="card-header">
+          <div class="avatar" style="background:${avStyle.bg};color:${avStyle.color}">${initials(person)}</div>
+          <div>
+            <div class="person-name">${person}</div>
+            <div class="person-meta">${allProjects.length}개 사업 · ${years.length}개 연도</div>
+          </div>
+          <span class="badge ${isOver ? 'badge-error' : 'badge-ok'}" style="margin-left:auto;">
+            ${isOver ? '⚠ 초과 있음' : '✅ 정상'}
+          </span>
+        </div>
+        <div class="card-body">${yearBlocks}</div>
+      </div>`;
+  }).join('');
+}
+
+// 저장된 설정 있으면 자동 로드
+if (config.sheetId && config.apiKey) {
+  loadData();
+} else {
+  setStatus('error', '⚙ 설정 버튼을 눌러 시트 ID와 API 키를 입력해주세요');
+  // 설정창 자동 오픈
+  toggleConfig();
+}
+</script>
+</body>
+</html>
