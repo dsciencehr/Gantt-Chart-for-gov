@@ -38,27 +38,70 @@
     }
   }
   body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; min-height: 100vh; }
-  .page { max-width: 1000px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
-  .page-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 2rem; flex-wrap: wrap; gap: 12px; }
+  .page { max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+
+  /* 헤더 */
+  .page-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 12px; }
   .page-title { font-size: 20px; font-weight: 600; }
   .subtitle { font-size: 13px; color: var(--text-muted); margin-top: 3px; }
+  .header-right { display: flex; align-items: center; gap: 8px; }
   .btn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: var(--radius-md); border: 1px solid var(--border-strong); background: var(--surface); color: var(--text); font-size: 13px; font-weight: 500; cursor: pointer; transition: background 0.15s; }
   .btn:hover { background: var(--bg); }
   .btn-primary { background: var(--text); color: var(--bg); border-color: var(--text); }
   .btn-primary:hover { opacity: 0.85; }
+
+  /* 상태바 */
   .status-bar { display: flex; align-items: center; gap: 10px; padding: 10px 16px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); margin-bottom: 1.5rem; font-size: 13px; }
   .status-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
   .dot-loading { background: var(--warn-text); animation: pulse 1s infinite; }
   .dot-ok { background: #27500A; }
   .dot-error { background: var(--error-text); }
   @keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.4} }
+
+  /* 탭 */
+  .tab-bar { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 1.5rem; }
+  .tab { padding: 10px 20px; font-size: 14px; font-weight: 500; color: var(--text-muted); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all 0.15s; }
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--text); border-bottom-color: var(--text); }
+
+  /* 연도 필터 */
+  .filter-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 1.2rem; flex-wrap: wrap; }
+  .filter-label { font-size: 12px; color: var(--text-muted); }
+  .year-btn { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 500; cursor: pointer; border: 1px solid var(--border-strong); background: var(--surface); color: var(--text-muted); transition: all 0.12s; }
+  .year-btn.active { background: var(--text); color: var(--bg); border-color: var(--text); }
+
+  /* ── 히트맵 탭 ── */
+  .heatmap-table { width: 100%; border-collapse: separate; border-spacing: 0; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
+  .heatmap-table th { padding: 10px 8px; font-size: 11px; font-weight: 500; color: var(--text-muted); text-align: center; background: var(--bg); border-bottom: 1px solid var(--border); }
+  .heatmap-table th.name-col { text-align: left; padding-left: 16px; min-width: 100px; }
+  .heatmap-table td { padding: 6px 4px; text-align: center; border-bottom: 1px solid var(--border); }
+  .heatmap-table td.name-cell { padding: 8px 8px 8px 16px; text-align: left; border-right: 1px solid var(--border); }
+  .heatmap-table tr:last-child td { border-bottom: none; }
+  .person-row-name { font-size: 13px; font-weight: 600; color: var(--text); }
+  .person-row-meta { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+  .heat-cell { width: 100%; height: 36px; border-radius: 5px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; cursor: pointer; transition: transform 0.1s; margin: 0 2px; }
+  .heat-cell:hover { transform: scale(1.08); }
+  .heat-0   { background: var(--bg); color: var(--text-hint); }
+  .heat-low { background: #C0DD97; color: #27500A; }
+  .heat-mid { background: #FAC775; color: #633806; }
+  .heat-full{ background: #F5C4B3; color: #712B13; }
+  .heat-over{ background: repeating-linear-gradient(45deg,#F09595,#F09595 3px,#FCEBEB 3px,#FCEBEB 7px); border:1px solid #F09595; color:#791F1F; }
+  .status-badge { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 10px; font-weight: 500; white-space: nowrap; }
+  .sb-ok    { background: var(--ok-fill);    color: var(--ok-text); }
+  .sb-error { background: var(--error-fill); color: var(--error-text); }
+  .legend-row { display: flex; align-items: center; gap: 16px; margin-top: 12px; flex-wrap: wrap; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text-muted); }
+  .legend-dot { width: 14px; height: 14px; border-radius: 3px; flex-shrink: 0; }
+
+  /* ── Gantt 탭 ── */
+  .person-select { width: 100%; padding: 9px 12px; border-radius: var(--radius-md); border: 1px solid var(--border-strong); background: var(--surface); color: var(--text); font-size: 14px; margin-bottom: 1.2rem; outline: none; cursor: pointer; }
   .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); margin-bottom: 16px; overflow: hidden; }
   .card-header { display: flex; align-items: center; gap: 12px; padding: 14px 20px; border-bottom: 1px solid var(--border); }
   .avatar { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; flex-shrink: 0; }
   .person-name { font-size: 15px; font-weight: 600; }
   .person-meta { font-size: 12px; color: var(--text-muted); margin-top: 1px; }
   .badge { font-size: 12px; padding: 3px 10px; border-radius: 20px; font-weight: 500; white-space: nowrap; }
-  .badge-ok { background: var(--ok-fill); color: var(--ok-text); }
+  .badge-ok    { background: var(--ok-fill);    color: var(--ok-text); }
   .badge-error { background: var(--error-fill); color: var(--error-text); }
   .card-body { padding: 16px 20px 20px; }
   .year-block { margin-bottom: 18px; }
@@ -66,10 +109,10 @@
   .year-badge-ok    { background: var(--ok-fill);    color: var(--ok-text);    font-size:11px; padding:2px 8px; border-radius:10px; font-weight:500; }
   .year-badge-error { background: var(--error-fill); color: var(--error-text); font-size:11px; padding:2px 8px; border-radius:10px; font-weight:500; }
   .month-header { display: grid; grid-template-columns: 110px 1fr; margin-bottom: 6px; }
-  .month-row { display: grid; grid-template-columns: repeat(12, 1fr); }
+  .month-row-g { display: grid; grid-template-columns: repeat(12, 1fr); }
   .month-label { font-size: 11px; color: var(--text-hint); text-align: center; }
   .proj-row { display: grid; grid-template-columns: 110px 1fr; align-items: center; margin-bottom: 6px; }
-  .proj-name { font-size: 12px; font-weight: 500; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 10px; }
+  .proj-name { font-size: 12px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 10px; }
   .proj-period { font-size: 11px; color: var(--text-muted); }
   .bar-row { display: grid; grid-template-columns: repeat(12, 1fr); gap: 2px; height: 26px; }
   .bar-empty  { background: var(--bg); border-radius: 3px; height: 26px; }
@@ -85,14 +128,17 @@
   .total-cells { display: grid; grid-template-columns: repeat(12, 1fr); gap: 2px; }
   .total-cell { height: 22px; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; }
   .t-empty { background: var(--bg); }
-  .t-ok   { background: var(--ok-fill);   color: var(--ok-text); }
-  .t-full { background: var(--warn-fill); color: var(--warn-text); }
-  .t-over { background: repeating-linear-gradient(45deg,var(--error-border),var(--error-border) 3px,var(--error-fill) 3px,var(--error-fill) 7px); border:1px solid var(--error-border); color:var(--error-text); }
+  .t-ok    { background: var(--ok-fill);   color: var(--ok-text); }
+  .t-full  { background: var(--warn-fill); color: var(--warn-text); }
+  .t-over  { background: repeating-linear-gradient(45deg,var(--error-border),var(--error-border) 3px,var(--error-fill) 3px,var(--error-fill) 7px); border:1px solid var(--error-border); color:var(--error-text); }
   .error-banner { margin-top:10px; padding:9px 13px; background:var(--error-fill); border:1px solid var(--error-border); border-radius:var(--radius-md); font-size:12px; color:var(--error-text); }
-  .legend { display:flex; flex-wrap:wrap; gap:12px; margin-top:12px; padding-top:10px; border-top:1px solid var(--border); }
-  .legend-item { display:flex; align-items:center; gap:5px; font-size:12px; color:var(--text-muted); }
-  .legend-dot { width:10px; height:10px; border-radius:2px; flex-shrink:0; }
+  .gantt-legend { display:flex; flex-wrap:wrap; gap:12px; margin-top:12px; padding-top:10px; border-top:1px solid var(--border); }
+  .gantt-legend-item { display:flex; align-items:center; gap:5px; font-size:12px; color:var(--text-muted); }
+  .gantt-legend-dot { width:10px; height:10px; border-radius:2px; flex-shrink:0; }
   .empty-state { text-align:center; padding:4rem 1rem; color:var(--text-muted); font-size:14px; line-height:2; }
+
+  /* 툴팁 */
+  .tooltip { position:fixed; background:var(--text); color:var(--bg); font-size:12px; padding:6px 10px; border-radius:6px; pointer-events:none; z-index:999; white-space:nowrap; display:none; }
 </style>
 </head>
 <body>
@@ -102,7 +148,9 @@
       <div class="page-title">📊 정부사업 참여율 현황</div>
       <div class="subtitle">사람별 월간 참여율 합계가 100%를 넘으면 안 됩니다</div>
     </div>
-    <button class="btn btn-primary" onclick="loadData()">↻ 새로고침</button>
+    <div class="header-right">
+      <button class="btn btn-primary" onclick="loadData()">↻ 새로고침</button>
+    </div>
   </div>
 
   <div class="status-bar" id="status-bar">
@@ -110,22 +158,47 @@
     <span id="status-text">데이터를 불러오는 중...</span>
   </div>
 
-  <div id="list"></div>
+  <div class="tab-bar">
+    <div class="tab active" id="tab-heat" onclick="switchTab('heat')">🗓 히트맵 요약</div>
+    <div class="tab" id="tab-gantt" onclick="switchTab('gantt')">📊 Gantt 상세</div>
+  </div>
+
+  <!-- 히트맵 탭 -->
+  <div id="view-heat">
+    <div class="filter-bar">
+      <span class="filter-label">연도</span>
+      <div id="year-filters"></div>
+    </div>
+    <div id="heatmap-wrap"></div>
+    <div class="legend-row">
+      <div class="legend-item"><div class="legend-dot heat-0"></div>참여 없음</div>
+      <div class="legend-item"><div class="legend-dot heat-low"></div>1~99%</div>
+      <div class="legend-item"><div class="legend-dot heat-mid"></div>50~99%</div>
+      <div class="legend-item"><div class="legend-dot heat-full"></div>100%</div>
+      <div class="legend-item"><div class="legend-dot heat-over" style="width:14px;height:14px;border-radius:3px;"></div>100% 초과 ⚠</div>
+    </div>
+  </div>
+
+  <!-- Gantt 탭 -->
+  <div id="view-gantt" style="display:none;">
+    <select class="person-select" id="person-select" onchange="renderGantt()">
+      <option value="all">전체 인원 보기</option>
+    </select>
+    <div id="gantt-wrap"></div>
+  </div>
 </div>
+
+<div class="tooltip" id="tooltip"></div>
 
 <script>
 const SHEET_ID   = '16X6gLq0o-UDfAxk93oYUBnZTkYWJqncSFW2wL8nOTK4';
 const API_KEY    = 'AIzaSyAESDv_Aeq7DmVa6bbT_Fjpzifwm856zXo';
 const SHEET_NAME = 'Sheet1';
-
 const MONTHS = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
 const BAR_COLORS = [
-  {cls:'bar-blue',   bg:'#B5D4F4'},
-  {cls:'bar-orange', bg:'#FAC775'},
-  {cls:'bar-green',  bg:'#C0DD97'},
-  {cls:'bar-purple', bg:'#CECBF6'},
-  {cls:'bar-coral',  bg:'#F5C4B3'},
-  {cls:'bar-pink',   bg:'#F4C0D1'},
+  {cls:'bar-blue',bg:'#B5D4F4'},{cls:'bar-orange',bg:'#FAC775'},
+  {cls:'bar-green',bg:'#C0DD97'},{cls:'bar-purple',bg:'#CECBF6'},
+  {cls:'bar-coral',bg:'#F5C4B3'},{cls:'bar-pink',bg:'#F4C0D1'},
 ];
 const AVATAR_STYLES = [
   {bg:'#EEEDFE',color:'#3C3489'},{bg:'#E1F5EE',color:'#085041'},
@@ -133,14 +206,19 @@ const AVATAR_STYLES = [
   {bg:'#EAF3DE',color:'#27500A'},{bg:'#FAEEDA',color:'#633806'},
 ];
 
+let allData = [];
+let grouped = {};
+let activeYear = null;
+let currentTab = 'heat';
+
 function setStatus(type, text) {
   document.getElementById('status-dot').className = 'status-dot ' +
-    (type==='loading' ? 'dot-loading' : type==='ok' ? 'dot-ok' : 'dot-error');
+    (type==='loading'?'dot-loading':type==='ok'?'dot-ok':'dot-error');
   document.getElementById('status-text').textContent = text;
 }
 
 async function loadData() {
-  setStatus('loading', '구글 시트에서 데이터를 불러오는 중...');
+  setStatus('loading','구글 시트에서 데이터를 불러오는 중...');
   const range = encodeURIComponent(`${SHEET_NAME}!A:F`);
   const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${range}?key=${API_KEY}`;
   try {
@@ -149,54 +227,159 @@ async function loadData() {
     if (json.error) throw new Error(json.error.message);
     const rows = (json.values||[]).slice(1);
     if (!rows.length) { setStatus('error','시트에 데이터가 없습니다'); return; }
-    const parsed = rows.map(r=>({
-      name:    (r[0]||'').trim(),
-      project: (r[1]||'').trim(),
-      year:    parseInt(r[2]),
-      start:   parseInt(r[3]),
-      end:     parseInt(r[4]),
-      rate:    parseInt(r[5]),
+    allData = rows.map(r=>({
+      name:(r[0]||'').trim(), project:(r[1]||'').trim(),
+      year:parseInt(r[2]), start:parseInt(r[3]), end:parseInt(r[4]), rate:parseInt(r[5]),
     })).filter(r=>r.name&&r.project&&r.year&&r.start&&r.end&&r.rate);
-    setStatus('ok', `✅ ${parsed.length}개 데이터 로드 완료 — ${new Date().toLocaleTimeString()}`);
-    render(parsed);
+    grouped = groupData(allData);
+    setStatus('ok',`✅ ${allData.length}개 데이터 로드 완료 — ${new Date().toLocaleTimeString()}`);
+    buildYearFilters();
+    buildPersonSelect();
+    renderHeatmap();
   } catch(e) {
     setStatus('error','❌ 오류: '+e.message);
-    document.getElementById('list').innerHTML =
-      `<div class="empty-state">데이터를 불러오지 못했습니다.<br>구글 시트 공개 설정을 확인해주세요.</div>`;
   }
 }
 
 function groupData(data) {
   const map = {};
-  data.forEach(d => {
-    if (!map[d.name]) map[d.name] = {};
-    if (!map[d.name][d.year]) map[d.name][d.year] = [];
+  data.forEach(d=>{
+    if (!map[d.name]) map[d.name]={};
+    if (!map[d.name][d.year]) map[d.name][d.year]=[];
     map[d.name][d.year].push(d);
   });
   return map;
 }
 
 function calcTotals(projects) {
-  const t = Array(12).fill(0);
-  projects.forEach(p => { for(let m=p.start-1;m<p.end;m++) t[m]+=p.rate; });
+  const t=Array(12).fill(0);
+  projects.forEach(p=>{for(let m=p.start-1;m<p.end;m++) t[m]+=p.rate;});
   return t;
 }
 
-function initials(name) { return name.length<=2?name:name.slice(0,2); }
+function initials(name){return name.length<=2?name:name.slice(0,2);}
 
-function render(data) {
-  const grouped = groupData(data);
-  const list = document.getElementById('list');
-  if (!Object.keys(grouped).length) {
-    list.innerHTML = '<div class="empty-state">데이터가 없습니다</div>';
-    return;
-  }
-  list.innerHTML = Object.entries(grouped).map(([person, yearMap], pi) => {
-    const av    = AVATAR_STYLES[pi % AVATAR_STYLES.length];
-    const years = Object.keys(yearMap).map(Number).sort();
-    const allMax = Math.max(...years.map(y=>Math.max(...calcTotals(yearMap[y]))));
-    const isOver = allMax > 100;
+function getAllYears() {
+  return [...new Set(allData.map(d=>d.year))].sort();
+}
+
+function buildYearFilters() {
+  const years = getAllYears();
+  if (!activeYear) activeYear = years[years.length-1];
+  const wrap = document.getElementById('year-filters');
+  wrap.innerHTML = years.map(y=>
+    `<button class="year-btn ${y===activeYear?'active':''}" onclick="setYear(${y})">${y}년</button>`
+  ).join('');
+}
+
+function setYear(y) {
+  activeYear = y;
+  buildYearFilters();
+  renderHeatmap();
+}
+
+function switchTab(tab) {
+  currentTab = tab;
+  document.getElementById('tab-heat').classList.toggle('active', tab==='heat');
+  document.getElementById('tab-gantt').classList.toggle('active', tab==='gantt');
+  document.getElementById('view-heat').style.display  = tab==='heat'  ? 'block' : 'none';
+  document.getElementById('view-gantt').style.display = tab==='gantt' ? 'block' : 'none';
+  if (tab==='gantt') renderGantt();
+}
+
+// ── 히트맵 ──
+function heatClass(v) {
+  if (v===0)    return 'heat-0';
+  if (v>100)   return 'heat-over';
+  if (v===100) return 'heat-full';
+  if (v>=50)   return 'heat-mid';
+  return 'heat-low';
+}
+
+function renderHeatmap() {
+  const people = Object.keys(grouped);
+  if (!people.length) return;
+
+  const rows = people.map((person, pi) => {
+    const yearMap  = grouped[person];
+    const projects = yearMap[activeYear] || [];
+    const totals   = calcTotals(projects);
+    const maxTotal = Math.max(...totals, 0);
+    const isOver   = maxTotal > 100;
+    const av       = AVATAR_STYLES[pi%AVATAR_STYLES.length];
+
+    const cells = totals.map((t, m) => {
+      const cls  = heatClass(t);
+      const label = t > 0 ? t+'%' : '';
+      const tip  = `${person} · ${MONTHS[m]} · ${t}%`;
+      return `<td><div class="heat-cell ${cls}" onmouseenter="showTip(event,'${tip}')" onmouseleave="hideTip()">${label}</div></td>`;
+    }).join('');
+
+    return `<tr>
+      <td class="name-cell" style="cursor:pointer;" onclick="goGantt('${person}')">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div style="width:28px;height:28px;border-radius:50%;background:${av.bg};color:${av.color};display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0;">${initials(person)}</div>
+          <div>
+            <div class="person-row-name">${person}</div>
+            <div class="person-row-meta">${projects.length}개 사업</div>
+          </div>
+        </div>
+      </td>
+      ${cells}
+      <td style="padding:6px 12px 6px 4px;">
+        <span class="status-badge ${isOver?'sb-error':'sb-ok'}">${isOver?'⚠ '+maxTotal+'%':'✅ '+maxTotal+'%'}</span>
+      </td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('heatmap-wrap').innerHTML = `
+    <table class="heatmap-table">
+      <thead><tr>
+        <th class="name-col">이름</th>
+        ${MONTHS.map(m=>`<th>${m}</th>`).join('')}
+        <th>최대</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+    <p style="font-size:11px;color:var(--text-hint);margin-top:8px;">이름 클릭 시 Gantt 상세로 이동합니다</p>`;
+}
+
+function goGantt(person) {
+  switchTab('gantt');
+  document.getElementById('person-select').value = person;
+  renderGantt();
+}
+
+// ── 툴팁 ──
+function showTip(e, text) {
+  const tip = document.getElementById('tooltip');
+  tip.textContent = text;
+  tip.style.display = 'block';
+  tip.style.left = (e.clientX+12)+'px';
+  tip.style.top  = (e.clientY-28)+'px';
+}
+function hideTip() { document.getElementById('tooltip').style.display='none'; }
+
+// ── Gantt ──
+function buildPersonSelect() {
+  const sel = document.getElementById('person-select');
+  const people = Object.keys(grouped);
+  sel.innerHTML = '<option value="all">전체 인원 보기</option>' +
+    people.map(p=>`<option value="${p}">${p}</option>`).join('');
+}
+
+function renderGantt() {
+  const sel    = document.getElementById('person-select').value;
+  const people = sel==='all' ? Object.keys(grouped) : [sel];
+  const wrap   = document.getElementById('gantt-wrap');
+
+  wrap.innerHTML = people.map((person, pi) => {
+    const av      = AVATAR_STYLES[pi%AVATAR_STYLES.length];
+    const yearMap = grouped[person];
+    const years   = Object.keys(yearMap).map(Number).sort();
     const allProjects = years.flatMap(y=>yearMap[y]);
+    const allMax  = Math.max(...years.map(y=>Math.max(...calcTotals(yearMap[y]))));
+    const isOver  = allMax > 100;
 
     const yearBlocks = years.map(year => {
       const projects = yearMap[year];
@@ -204,11 +387,11 @@ function render(data) {
       const maxTotal = Math.max(...totals);
       const yearOver = maxTotal > 100;
 
-      const projRows = projects.map((p,i) => {
+      const projRows = projects.map((p,i)=>{
         const col = BAR_COLORS[i%BAR_COLORS.length];
-        const cells = MONTHS.map((_,m) => {
-          if (m>=p.start-1 && m<p.end) {
-            const rS=m===p.start-1, rE=m===p.end-1;
+        const cells = MONTHS.map((_,m)=>{
+          if (m>=p.start-1&&m<p.end) {
+            const rS=m===p.start-1,rE=m===p.end-1;
             return `<div class="bar-filled ${col.cls}" style="border-radius:${rS?'4px':'0'} ${rE?'4px':'0'} ${rE?'4px':'0'} ${rS?'4px':'0'}">${rS?p.rate+'%':''}</div>`;
           }
           return `<div class="bar-empty"></div>`;
@@ -219,20 +402,20 @@ function render(data) {
         </div>`;
       }).join('');
 
-      const totalCells = totals.map(t => {
-        if (t===0)    return `<div class="total-cell t-empty"></div>`;
-        if (t>100)   return `<div class="total-cell t-over">${t}%</div>`;
-        if (t===100) return `<div class="total-cell t-full">${t}%</div>`;
+      const totalCells = totals.map(t=>{
+        if(t===0)   return `<div class="total-cell t-empty"></div>`;
+        if(t>100)  return `<div class="total-cell t-over">${t}%</div>`;
+        if(t===100)return `<div class="total-cell t-full">${t}%</div>`;
         return `<div class="total-cell t-ok">${t}%</div>`;
       }).join('');
 
       const errorMonths = totals.map((t,i)=>t>100?MONTHS[i]:null).filter(Boolean);
       const errorBanner = errorMonths.length
-        ? `<div class="error-banner">⚠ ${errorMonths.join(', ')} 구간에서 100%를 초과합니다. 조정이 필요합니다.</div>` : '';
+        ?`<div class="error-banner">⚠ ${errorMonths.join(', ')} 구간에서 100%를 초과합니다.</div>`:'';
 
-      const legend = projects.map((p,i) => {
-        const col = BAR_COLORS[i%BAR_COLORS.length];
-        return `<div class="legend-item"><div class="legend-dot" style="background:${col.bg}"></div>${p.project} (${p.rate}%)</div>`;
+      const legend = projects.map((p,i)=>{
+        const col=BAR_COLORS[i%BAR_COLORS.length];
+        return `<div class="gantt-legend-item"><div class="gantt-legend-dot" style="background:${col.bg}"></div>${p.project} (${p.rate}%)</div>`;
       }).join('');
 
       return `<div class="year-block">
@@ -241,7 +424,7 @@ function render(data) {
         </div>
         <div class="month-header">
           <div></div>
-          <div class="month-row">${MONTHS.map(m=>`<div class="month-label">${m}</div>`).join('')}</div>
+          <div class="month-row-g">${MONTHS.map(m=>`<div class="month-label">${m}</div>`).join('')}</div>
         </div>
         ${projRows}
         <div class="total-wrap">
@@ -249,7 +432,7 @@ function render(data) {
           <div class="total-cells">${totalCells}</div>
         </div>
         ${errorBanner}
-        <div class="legend">${legend}</div>
+        <div class="gantt-legend">${legend}</div>
       </div>`;
     }).join('');
 
