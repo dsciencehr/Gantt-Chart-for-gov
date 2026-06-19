@@ -165,22 +165,29 @@
 
   <!-- 히트맵 탭 -->
   <div id="view-heat">
+    <div class="legend-row" style="margin-top:0; margin-bottom:12px;">
+      <div class="legend-item"><div class="legend-dot heat-0"></div>참여 없음</div>
+      <div class="legend-item"><div class="legend-dot heat-low"></div>1~49%</div>
+      <div class="legend-item"><div class="legend-dot heat-mid"></div>50~99%</div>
+      <div class="legend-item"><div class="legend-dot heat-full"></div>100%</div>
+      <div class="legend-item"><div class="legend-dot heat-over" style="width:14px;height:14px;border-radius:3px;"></div>100% 초과 ⚠</div>
+    </div>
     <div class="filter-bar">
       <span class="filter-label">연도</span>
       <div id="year-filters"></div>
     </div>
     <div id="heatmap-wrap"></div>
-    <div class="legend-row">
-      <div class="legend-item"><div class="legend-dot heat-0"></div>참여 없음</div>
-      <div class="legend-item"><div class="legend-dot heat-low"></div>1~99%</div>
-      <div class="legend-item"><div class="legend-dot heat-mid"></div>50~99%</div>
-      <div class="legend-item"><div class="legend-dot heat-full"></div>100%</div>
-      <div class="legend-item"><div class="legend-dot heat-over" style="width:14px;height:14px;border-radius:3px;"></div>100% 초과 ⚠</div>
-    </div>
   </div>
 
   <!-- Gantt 탭 -->
   <div id="view-gantt" style="display:none;">
+    <div class="legend-row" style="margin-top:0; margin-bottom:12px;">
+      <div class="legend-item"><div class="legend-dot heat-0"></div>참여 없음</div>
+      <div class="legend-item"><div class="legend-dot heat-low"></div>1~49%</div>
+      <div class="legend-item"><div class="legend-dot heat-mid"></div>50~99%</div>
+      <div class="legend-item"><div class="legend-dot heat-full"></div>100%</div>
+      <div class="legend-item"><div class="legend-dot heat-over" style="width:14px;height:14px;border-radius:3px;"></div>100% 초과 ⚠</div>
+    </div>
     <select class="person-select" id="person-select" onchange="renderGantt()">
       <option value="all">전체 인원 보기</option>
     </select>
@@ -363,7 +370,7 @@ function hideTip() { document.getElementById('tooltip').style.display='none'; }
 // ── Gantt ──
 function buildPersonSelect() {
   const sel = document.getElementById('person-select');
-  const people = Object.keys(grouped);
+  const people = Object.keys(grouped).sort((a, b) => a.localeCompare(b, 'ko'));
   sel.innerHTML = '<option value="all">전체 인원 보기</option>' +
     people.map(p=>`<option value="${p}">${p}</option>`).join('');
 }
