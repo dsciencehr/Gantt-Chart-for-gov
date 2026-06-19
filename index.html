@@ -138,7 +138,7 @@
   .empty-state { text-align:center; padding:4rem 1rem; color:var(--text-muted); font-size:14px; line-height:2; }
 
   /* 툴팁 */
-  .tooltip { position:fixed; background:var(--text); color:var(--bg); font-size:12px; padding:6px 10px; border-radius:6px; pointer-events:none; z-index:999; white-space:nowrap; display:none; }
+  .tooltip { position:fixed; background:var(--text); color:var(--bg); font-size:12px; padding:8px 12px; border-radius:8px; pointer-events:none; z-index:999; display:none; line-height:1.7; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
 </style>
 </head>
 <body>
@@ -318,7 +318,9 @@ function renderHeatmap() {
     const cells = totals.map((t, m) => {
       const cls  = heatClass(t);
       const label = t > 0 ? t+'%' : '';
-      const tip  = `${person} · ${MONTHS[m]} · ${t}%`;
+      const remain = 100 - t;
+      const remainText = t === 0 ? '참여 없음' : t > 100 ? `⚠ ${t - 100}% 초과!` : remain === 0 ? '잔여 없음 (100% 꽉 참)' : `잔여 ${remain}%`;
+      const tip = `${person} · ${MONTHS[m]} | 현재 ${t}% · ${remainText}`;
       return `<td><div class="heat-cell ${cls}" onmouseenter="showTip(event,'${tip}')" onmouseleave="hideTip()">${label}</div></td>`;
     }).join('');
 
@@ -360,10 +362,10 @@ function goGantt(person) {
 // ── 툴팁 ──
 function showTip(e, text) {
   const tip = document.getElementById('tooltip');
-  tip.textContent = text;
+  tip.innerHTML = text.replace(' | ', '<br>');
   tip.style.display = 'block';
-  tip.style.left = (e.clientX+12)+'px';
-  tip.style.top  = (e.clientY-28)+'px';
+  tip.style.left = (e.clientX+14)+'px';
+  tip.style.top  = (e.clientY-52)+'px';
 }
 function hideTip() { document.getElementById('tooltip').style.display='none'; }
 
