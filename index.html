@@ -216,6 +216,7 @@ const AVATAR_STYLES = [
 let allData = [];
 let grouped = {};
 let activeYear = null;
+let userPickedYear = false; // 사용자가 직접 연도 선택했는지 여부
 let currentTab = 'heat';
 
 function setStatus(type, text) {
@@ -272,7 +273,11 @@ function getAllYears() {
 
 function buildYearFilters() {
   const years = getAllYears();
-  if (!activeYear) activeYear = years[years.length-1];
+  const currentYear = new Date().getFullYear();
+  // 사용자가 직접 선택하지 않은 경우 항상 현재 연도 우선
+  if (!userPickedYear) {
+    activeYear = years.includes(currentYear) ? currentYear : years[years.length - 1];
+  }
   const wrap = document.getElementById('year-filters');
   wrap.innerHTML = years.map(y=>
     `<button class="year-btn ${y===activeYear?'active':''}" onclick="setYear(${y})">${y}년</button>`
@@ -281,6 +286,7 @@ function buildYearFilters() {
 
 function setYear(y) {
   activeYear = y;
+  userPickedYear = true;
   buildYearFilters();
   renderHeatmap();
 }
